@@ -3,10 +3,13 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
-
     <IsPackable>false</IsPackable>
-
     <RootNamespace>$(MSBuildProjectName.Replace(" ", "_").Replace(".Tests", ""))</RootNamespace>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <VSTestLogger>trx</VSTestLogger>
+    <VSTestResultsDirectory>$(SolutionDir)test\output</VSTestResultsDirectory>
   </PropertyGroup>
 
   <ItemGroup>

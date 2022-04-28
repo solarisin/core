@@ -9,11 +9,11 @@ namespace Solarisin.Core.Extensions;
 public static class EnumExtensions
 {
     /// <summary>
-    /// Retrieve the description attribute for the given enum value.
+    /// Retrieve the description attribute for the given enum value, or the name if the attribute does not exist.
     /// </summary>
     /// <param name="value">The enum value to retrieve the description for.</param>
-    /// <returns>The description attribute string.</returns>
-    /// <exception cref="InvalidOperationException">Thrown if the enum value or attribute is missing.</exception>
+    /// <returns>The description attribute string if found, name of the enum value otherwise.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if the supplied enum value is not represented in the enumeration.</exception>
     public static string GetDescription(this Enum value)
     {
         var type = value.GetType();
@@ -21,8 +21,7 @@ public static class EnumExtensions
                    throw new InvalidOperationException($"Enum {type.Name} does not contain value {value}");
         var field = type.GetField(name) ??
                    throw new InvalidOperationException($"Enum {type.Name} does not contain field {name}");
-        var attribute = field.GetCustomAttribute<DescriptionAttribute>() ??
-                   throw new InvalidOperationException($"Enum {type.Name} does not contain description attribute for {name}");
-        return attribute.Description;
+        var attribute = field.GetCustomAttribute<DescriptionAttribute>();
+        return attribute != null ? attribute.Description : name;
     }
 }

@@ -39,10 +39,10 @@ jobs:
           github-secret: ${{ secrets.GITHUB_TOKEN }}
 
       - name: .NET Build Solution
-        run: dotnet build ./src/Solarisin.Core/Solarisin.Core.csproj  /p:Version=${{steps.get-version.outputs.package-version}} --configuration Release
+        run: dotnet build ./src/Solarisin.Core/Solarisin.Core.csproj -p:Version=${{steps.get-version.outputs.package-version}} --configuration Release
 
       - name: Create the package
-        run: dotnet pack ./src/Solarisin.Core/Solarisin.Core.csproj /p:PackageVersion=${{steps.get-version.outputs.package-version}} --configuration Release
+        run: dotnet pack ./src/Solarisin.Core/Solarisin.Core.csproj -p:PackageVersion=${{steps.get-version.outputs.package-version}} --configuration Release
         
       #- name: Publish NuGet package to GitHub
       #  run: dotnet nuget push ./src/Solarisin.Core/bin/Release/*.nupkg --source 'github' --api-key '${{ secrets.GITHUB_TOKEN }}' --skip-duplicate

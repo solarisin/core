@@ -1,6 +1,6 @@
 # yaml-language-server: $schema=https://json.schemastore.org/github-action.json
 name: 'Setup .NET build dependencies'
-description: 'Sets up the .NET dependencies of MSBuild, SDK, NuGet'
+description: 'Sets up the .NET dependencies of MSBuild, SDK, NuGet packages and Github packages'
 branding:
   icon: download
   color: purple

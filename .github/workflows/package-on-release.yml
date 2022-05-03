@@ -1,0 +1,42 @@
+﻿name: Pack and Push NuGet package to GitHub on Release
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - name: Determine package version
+        uses: actions/github-script@v4
+        id: get-version
+        with:
+          script: |
+            const release_ver = github.event.release.tag_name;
+            let no_v = release_ver;
+            if(release_ver.startsWith('v')) {
+              no_v = release_ver.substring(1);
+            }
+            core.setOutput('package-version', no_v);
+
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET build dependencies
+        uses: ./.github/workflows/composite/bootstrap-dotnet
+        with:
+          github-packages: true
+          github-username: ${{ github.actor }}
+          github-secret: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: .NET Build Solution
+        run: dotnet build ./src/Solarisin.Core/Solarisin.Core.csproj  /p:Version=${{steps.get-version.outputs.package-version}} --configuration Release
+
+      - name: Create the package
+        run: dotnet pack ./src/Solarisin.Core/Solarisin.Core.csproj --configuration Release
+        
+      #- name: Publish NuGet package to GitHub
+      #  run: dotnet nuget push ./src/Solarisin.Core/bin/Release/*.nupkg --source 'github' --api-key '${{ secrets.GITHUB_TOKEN }}' --skip-duplicate

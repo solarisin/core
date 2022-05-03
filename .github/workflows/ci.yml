@@ -37,12 +37,8 @@ jobs:
         run: dotnet test ./Solarisin.Core.sln --no-restore --verbosity normal --configuration Release
         
       - name: Upload .NET Unit Test results
+        if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
           name: test-artifacts
           path: ./test/output/*
-        # Use always() to always run this step to publish test results when there are test failures
-        if: ${{ always() }}
-        
-      - name: Publish NuGet package to GitHub
-        run: dotnet nuget push ./src/Solarisin.Core/bin/Release/*.nupkg --source 'github' --api-key '${{ secrets.GITHUB_TOKEN }}' --skip-duplicate

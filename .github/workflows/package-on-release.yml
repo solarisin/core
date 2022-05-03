@@ -21,8 +21,8 @@ jobs:
           TAG_NAME: ${{ github.event.release.tag_name }}
         with:
           script: |
-            const { TAG_NAME } = process.env
-            const release_ver = ${TAG_NAME};
+            const { TAG_NAME } = process.env;
+            const release_ver = `${TAG_NAME}`;
             let no_v = release_ver;
             if(release_ver.startsWith('v')) {
               no_v = release_ver.substring(1);

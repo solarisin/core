@@ -47,4 +47,4 @@ runs:
       with:
         nuget-version: '5.x'
         nuget-api-key: ${{ inputs.nuget-secret }}
-        nuget-source: ${{ inputs.nuget-source }}
+        nuget-api-key-source: ${{ inputs.nuget-source }}

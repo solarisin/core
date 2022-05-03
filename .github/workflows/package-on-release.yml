@@ -17,9 +17,12 @@ jobs:
       - name: Determine package version
         uses: actions/github-script@v4
         id: get-version
+        env:
+          TAG_NAME: ${{ github.event.release.tag_name }}
         with:
           script: |
-            const release_ver = ${{ github.event.release.tag_name }};
+            const { TAG_NAME } = process.env
+            const release_ver = ${TAG_NAME};
             let no_v = release_ver;
             if(release_ver.startsWith('v')) {
               no_v = release_ver.substring(1);

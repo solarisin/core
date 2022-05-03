@@ -25,8 +25,10 @@ jobs:
 
       - name: Setup .NET build dependencies
         uses: ./.github/workflows/composite/bootstrap-dotnet
-          with: 
-        
+        with:
+          nuget-source: 'github'
+          nuget-token: ${{ secrets.NUGET_TOKEN }}
+            
       - name: .NET Build Solution
         run: dotnet build ./Solarisin.Core.sln --configuration Release
         

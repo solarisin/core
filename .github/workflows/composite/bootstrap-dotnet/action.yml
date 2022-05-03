@@ -23,8 +23,7 @@ inputs:
     default: 'true'
   nuget-secret:
     description: 'Nuget secret token'
-    required: false
-    default: ''
+    required: true
   nuget-source:
     description: 'Nuget source'
     required: false

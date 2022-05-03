@@ -61,4 +61,4 @@ runs:
     - name: Setup .NET Github NuGet Source
       if: inputs.github-packages == 'true'
       shell: cmd
-      run: dotnet nuget update source 'github' --username '${{ input.github-username }}' --password '${{ input.github-secret }}' --store-password-in-clear-text
+      run: dotnet nuget update source 'github' --username '${{ inputs.github-username }}' --password '${{ inputs.github-secret }}' --store-password-in-clear-text

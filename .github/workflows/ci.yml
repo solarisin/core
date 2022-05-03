@@ -38,7 +38,7 @@ jobs:
           
       - name: Parse Trx files
         if: ${{ always() }}
-        uses: solarisin/trx-parser@dev2
+        uses: solarisin/trx-parser@dev3
         id: trx-parser
         with:
           TRX_PATH: ./test/output/
@@ -70,7 +70,7 @@ jobs:
 
       - name: Parse Trx files
         if: ${{ always() }}
-        uses: solarisin/trx-parser@dev2
+        uses: solarisin/trx-parser@dev3
         id: trx-parser
         with:
           TRX_PATH: ./test/output/

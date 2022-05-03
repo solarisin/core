@@ -21,6 +21,14 @@ inputs:
     description: 'Setup NuGet'
     required: false
     default: 'true'
+  nuget-secret:
+    description: 'Nuget secret token'
+    required: false
+    default: ''
+  nuget-source:
+    description: 'Nuget source'
+    required: false
+    default: 'nuget.org'
 runs:
   using: "composite"
   steps:
@@ -39,5 +47,5 @@ runs:
       uses: nuget/setup-nuget@v1.0.6
       with:
         nuget-version: '5.x'
-        nuget-api-key: ${{ secrets.NUGET_TOKEN }}
-        nuget-source: 'github'
+        nuget-api-key: ${{ inputs.nuget-secret }}
+        nuget-source: ${{ inputs.nuget-source }}

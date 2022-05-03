@@ -25,6 +25,7 @@ jobs:
 
       - name: Setup .NET build dependencies
         uses: ./.github/workflows/composite/bootstrap-dotnet
+          with: 
         
       - name: .NET Build Solution
         run: dotnet build ./Solarisin.Core.sln --configuration Release

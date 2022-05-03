@@ -19,7 +19,7 @@ jobs:
         id: get-version
         with:
           script: |
-            const release_ver = github.event.release.tag_name;
+            const release_ver = ${{ github.event.release.tag_name }};
             let no_v = release_ver;
             if(release_ver.startsWith('v')) {
               no_v = release_ver.substring(1);

@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+name: 'Setup .NET build dependencies'
+description: 'Sets up the .NET dependencies of MSBuild, SDK, NuGet'
+branding:
+  icon: download
+  color: purple
+inputs:
+  dotnet-version:
+    description: 'What .NET SDK version to use'
+    required: true
+    default: 6.0.x
+  sdk:
+    description: 'Setup .NET SDK'
+    required: false
+    default: 'true'
+  msbuild:
+    description: 'Setup MSBuild'
+    required: false
+    default: 'true'
+  nuget:
+    description: 'Setup NuGet'
+    required: false
+    default: 'true'
+runs:
+  using: "composite"
+  steps:
+    - name: Setup dotnet
+      if: inputs.sdk == 'true'
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: ${{ inputs.dotnet-version }}
+
+    - name: Setup MSBuild
+      if: inputs.msbuild == 'true' && runner.os == 'Windows'
+      uses: microsoft/setup-msbuild@v1.1
+
+    - name: Setup Github NuGet
+      if: inputs.nuget == 'true'
+      uses: nuget/setup-nuget@v1.0.6
+      with:
+        nuget-version: '5.x'
+        nuget-api-key: ${{ secrets.NUGET_TOKEN}}
+        nuget-source: 'github'

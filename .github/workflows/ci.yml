@@ -14,7 +14,7 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  build:
+  build-test-release:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -35,10 +35,44 @@ jobs:
         
       - name: .NET Execute Unit Tests
         run: dotnet test ./Solarisin.Core.sln --no-restore --verbosity normal --configuration Release
-        
-      - name: Upload .NET Unit Test results
+          
+      - name: Parse Trx files
         if: ${{ always() }}
-        uses: actions/upload-artifact@v3
+        uses: solarisin/trx-parser@dev2
+        id: trx-parser
         with:
-          name: test-artifacts
-          path: ./test/output/*
+          TRX_PATH: ./test/output/
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BADGE_STYLE: emoji
+        
+  build-test-debug:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+
+      - name: Setup .NET build dependencies
+        uses: ./.github/workflows/composite/bootstrap-dotnet
+        with:
+          github-packages: true
+          github-username: ${{ github.actor }}
+          github-secret: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: .NET Build Solution
+        run: dotnet build ./Solarisin.Core.sln --configuration Debug
+
+      # TODO: add code coverage for debug build
+      - name: .NET Execute Unit Tests
+        run: dotnet test ./Solarisin.Core.sln --no-restore --verbosity normal --configuration Debug
+
+      - name: Parse Trx files
+        if: ${{ always() }}
+        uses: solarisin/trx-parser@dev2
+        id: trx-parser
+        with:
+          TRX_PATH: ./test/output/
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BADGE_STYLE: emoji

@@ -4,30 +4,40 @@ description: 'Sets up the .NET dependencies of MSBuild, SDK, NuGet'
 branding:
   icon: download
   color: purple
-inputs:
-  dotnet-version:
-    description: 'What .NET SDK version to use'
-    required: true
-    default: 6.0.x
-  sdk:
-    description: 'Setup .NET SDK'
-    required: false
-    default: 'true'
-  msbuild:
-    description: 'Setup MSBuild'
-    required: false
-    default: 'true'
-  nuget:
-    description: 'Setup NuGet'
-    required: false
-    default: 'true'
-  nuget-secret:
-    description: 'Nuget secret token'
-    required: true
-  nuget-source:
-    description: 'Nuget source'
-    required: false
-    default: 'nuget.org'
+inputs:   
+    dotnet-version:
+      description: 'What .NET SDK version to use'
+      required: true
+      default: 6.0.x
+    sdk:
+      description: 'Setup .NET SDK flag'
+      required: false
+      default: 'true'
+    msbuild:
+      description: 'Setup MSBuild flag'
+      required: false
+      default: 'true'
+    nuget-packages:
+      description: 'Setup NuGet packages flag'
+      required: false
+      default: 'false'
+    github-packages:
+      description: 'Setup NuGet GitHub packages flag'
+      required: false
+      default: 'false'
+    github-username:
+      description: 'Github username'
+      required: false
+      default: 'nuget.org'
+    github-secret:
+      description: 'Github secret token'
+      required: false
+      default: ''
+    nuget-secret:
+      description: 'Nuget secret token'
+      required: false
+      default: ''
+
 runs:
   using: "composite"
   steps:
@@ -41,10 +51,14 @@ runs:
       if: inputs.msbuild == 'true' && runner.os == 'Windows'
       uses: microsoft/setup-msbuild@v1.1
 
-    - name: Setup Github NuGet
-      if: inputs.nuget == 'true'
+    - name: Setup NuGet Source
+      if: inputs.nuget-packages == 'true'
       uses: nuget/setup-nuget@v1.0.6
       with:
         nuget-version: '5.x'
         nuget-api-key: ${{ inputs.nuget-secret }}
-        nuget-api-key-source: ${{ inputs.nuget-source }}
+
+    - name: Setup .NET Github NuGet Source
+      if: inputs.github-packages == 'true'
+      shell: cmd
+      run: dotnet nuget update source 'github' --username '${{ input.github-username }}' --password '${{ input.github-secret }}' --store-password-in-clear-text

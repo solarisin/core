@@ -1,4 +1,4 @@
-﻿name: Pack and Push NuGet package to GitHub on Release
+﻿name: Publish NuGet Package
 
 on:
   release:
@@ -17,9 +17,12 @@ jobs:
       - name: Determine package version
         uses: actions/github-script@v4
         id: get-version
+        env:
+          TAG_NAME: ${{ github.event.release.tag_name }}
         with:
           script: |
-            const release_ver = github.event.release.tag_name;
+            const { TAG_NAME } = process.env;
+            const release_ver = `${TAG_NAME}`;
             let no_v = release_ver;
             if(release_ver.startsWith('v')) {
               no_v = release_ver.substring(1);
@@ -36,10 +39,10 @@ jobs:
           github-secret: ${{ secrets.GITHUB_TOKEN }}
 
       - name: .NET Build Solution
-        run: dotnet build ./src/Solarisin.Core/Solarisin.Core.csproj  /p:Version=${{steps.get-version.outputs.package-version}} --configuration Release
+        run: dotnet build ./src/Solarisin.Core/Solarisin.Core.csproj -p:Version=${{steps.get-version.outputs.package-version}} --configuration Release
 
       - name: Create the package
-        run: dotnet pack ./src/Solarisin.Core/Solarisin.Core.csproj --configuration Release
+        run: dotnet pack ./src/Solarisin.Core/Solarisin.Core.csproj -p:PackageVersion=${{steps.get-version.outputs.package-version}} --configuration Release
         
       #- name: Publish NuGet package to GitHub
       #  run: dotnet nuget push ./src/Solarisin.Core/bin/Release/*.nupkg --source 'github' --api-key '${{ secrets.GITHUB_TOKEN }}' --skip-duplicate

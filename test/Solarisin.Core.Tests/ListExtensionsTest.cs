@@ -32,6 +32,21 @@ public class ListExtensionsTest
     }   
     
     [Theory]
+    [InlineData(new[] { 32, 77, 840 }, 32)]
+    [InlineData(new[] { 5, 3, 8, 11, 60, 88, 79 }, 5)]
+    [InlineData(new[] { 900, 34, 11, 42 }, 900)]
+    [InlineData(new[] { 20, 34, 11, 42 }, 20)]
+    [InlineData(new int[] { }, null)]
+    public void TestPopFirstNoPredicate(int[] array, int? expected)
+    {
+        var list = new List<int>(array);
+        if (expected == null)
+            Assert.Throws<ArgumentOutOfRangeException>(() => list.PopFirst());
+        else
+            Assert.Equal(expected, list.PopFirst());
+    }
+    
+    [Theory]
     [InlineData(new[] { 32, 77, 840 }, 77)]
     [InlineData(new[] { 5, 3, 8, 11, 60, 88, 79 }, 60)]
     [InlineData(new[] { 900, 34, 11, 42 }, 900)]
@@ -61,10 +76,22 @@ public class ListExtensionsTest
     [Theory]
     [InlineData(new[] { "a", "abcfd", "ddd", "abacalkd" }, "abacalkd")]
     [InlineData(new[] { "test", "testtest", "aa", "dd" }, "testtest")]
+    [InlineData(new[] { "hellothere" }, "hellothere")]
     [InlineData(new[] { "cool", "test", "aa", "dd" }, null)]
     public void TestPopFirstOrDefaultString(string[] array, string? expected)
     {     
         var list = new List<string?>(array);
         Assert.Equal(expected, list.PopFirstOrDefault(x=>x?.Length>5));
+    }
+    
+    [Theory]
+    [InlineData(new[] { "a", "abcfd", "ddd", "abacalkd" }, "a")]
+    [InlineData(new[] { "test", "testtest", "aa", "dd" }, "test")]
+    [InlineData(new[] { "hello" }, "hello")]
+    [InlineData(new string[] { }, null)]
+    public void TestPopFirstOrDefaultNoPredicate(string[] array, string? expected)
+    {
+        var list = new List<string?>(array);
+        Assert.Equal(expected, list.PopFirstOrDefault());
     }
 }

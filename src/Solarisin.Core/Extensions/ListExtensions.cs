@@ -26,9 +26,10 @@ public static class ListExtensions
     /// <param name="predicate">The predicate to match the element.</param>
     /// <typeparam name="T">The type of the elements in this list.</typeparam>
     /// <returns>The popped element.</returns>
-    public static T PopFirst<T>(this List<T> list, Predicate<T> predicate)
+    public static T PopFirst<T>(this List<T> list, Predicate<T>? predicate = null)
     {
-        var index = list.FindIndex(predicate);
+        var validPredicate = predicate ?? (_ => true);
+        var index = list.FindIndex(validPredicate);
         var r = list[index];
         list.RemoveAt(index);
         return r;
@@ -41,9 +42,10 @@ public static class ListExtensions
     /// <param name="predicate">The predicate to match the element.</param>
     /// <typeparam name="T">The type of the elements in this list.</typeparam>
     /// <returns>The popped element, or null.</returns>
-    public static T? PopFirstOrDefault<T>(this List<T?> list, Predicate<T?> predicate) where T : class
+    public static T? PopFirstOrDefault<T>(this List<T?> list, Predicate<T?>? predicate = null) where T : class
     {
-        var index = list.FindIndex(predicate);
+        var validPredicate = predicate ?? (_ => true);
+        var index = list.FindIndex(validPredicate);
         if (index <= -1) return null;
         var r = list[index];
         list.RemoveAt(index);

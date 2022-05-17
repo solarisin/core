@@ -32,6 +32,13 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
           
+      - name: Setup .NET build dependencies
+        uses: ./.github/workflows/composite/bootstrap-dotnet
+        with:
+          github-packages: true
+          github-username: ${{ github.actor }}
+          github-secret: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: Cache SonarQube packages
         uses: actions/cache@v1
         with:
@@ -53,14 +60,6 @@ jobs:
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-          
-      - name: Setup .NET build dependencies
-        uses: ./.github/workflows/composite/bootstrap-dotnet
-        with:
-          nuget-packages: true
-          github-packages: true
-          github-username: ${{ github.actor }}
-          github-secret: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Start Analyze
         env:

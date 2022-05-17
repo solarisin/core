@@ -57,6 +57,7 @@ jobs:
       - name: Setup .NET build dependencies
         uses: ./.github/workflows/composite/bootstrap-dotnet
         with:
+          nuget-packages: true
           github-packages: true
           github-username: ${{ github.actor }}
           github-secret: ${{ secrets.GITHUB_TOKEN }}

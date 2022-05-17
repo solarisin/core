@@ -71,16 +71,15 @@ jobs:
       - name: .NET Build Solution
         run: dotnet build ./Solarisin.Core.sln --configuration ${{ matrix.configuration }}
         
+      - name: .NET Execute Unit Tests
+        run: dotnet test ./Solarisin.Core.sln --no-restore --verbosity detailed --configuration ${{ matrix.configuration }}
+        
       - name: End Analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-
-      # TODO: add code coverage for debug build
-      - name: .NET Execute Unit Tests
-        run: dotnet test ./Solarisin.Core.sln --no-restore --verbosity normal --configuration ${{ matrix.configuration }}
 
       - name: Parse Trx files
         if: ${{ always() }}
@@ -90,7 +89,4 @@ jobs:
           TRX_PATH: ./test/output/${{ matrix.configuration }}
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BADGE_STYLE: emoji
-          
-          
-          
           

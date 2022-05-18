@@ -5,15 +5,6 @@ namespace Solarisin.Core.Tests;
 
 public class EnumExtensionsTest
 {
-    enum TestEnumeration
-    {
-        NoDescription,
-        [Description("TheShortDescription")]
-        ShortDescription,
-        [Description("An Extremely Long Description That Goes On And On And On")]
-        LongDescription
-    }
-
     [Theory]
     [InlineData(TestEnumeration.NoDescription, "NoDescription")]
     [InlineData(TestEnumeration.ShortDescription, "TheShortDescription")]
@@ -22,10 +13,26 @@ public class EnumExtensionsTest
     {
         Assert.Equal(expected, value.GetDescription());
     }
-    
-    [Fact]
-    public void TestGetDescriptionException()
+
+    [Theory]
+    [InlineData(true, (TestEnumeration)123)]
+    [InlineData(false, TestEnumeration.NoDescription)]
+    public void TestGetDescriptionException(bool shouldThrow, Enum value)
     {
-        Assert.Throws<InvalidOperationException>(() => { ((TestEnumeration)123).GetDescription(); });
+        if (shouldThrow)
+            Assert.Throws<InvalidOperationException>(
+                value.GetDescription
+            );
+        else
+            Assert.Equal("NoDescription", value.GetDescription());
+    }
+
+    private enum TestEnumeration
+    {
+        NoDescription,
+        [Description("TheShortDescription")] ShortDescription,
+
+        [Description("An Extremely Long Description That Goes On And On And On")]
+        LongDescription
     }
 }

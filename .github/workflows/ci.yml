@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build-analyze-release:
+  build-test-release:
     runs-on: ubuntu-latest
     
     env:
@@ -42,9 +42,8 @@ jobs:
         with:
           TRX_PATH: ${{ env.TRX_DIRECTORY }}
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BADGE_STYLE: emoji
           
-  build-analyze-debug:
+  build-test-analyze-debug:
     runs-on: windows-latest
     
     env:
@@ -118,4 +117,3 @@ jobs:
         with:
           TRX_PATH: ${{ env.TRX_DIRECTORY }}
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BADGE_STYLE: emoji

@@ -18,7 +18,7 @@ jobs:
     
     strategy:
       matrix:
-        configuration: [Debug, Release]
+        configuration: [ Debug, Release ]
     
     env:
       TRX_DIRECTORY: ./test/output/${{ matrix.configuration }}
@@ -29,26 +29,26 @@ jobs:
         if: ${{ matrix.configuration == 'Debug' }}
         with:
           java-version: 1.11
-          
+
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-          
+
       - name: Setup .NET build dependencies
         uses: ./.github/workflows/composite/bootstrap-dotnet
         with:
           github-packages: true
           github-username: ${{ github.actor }}
           github-secret: ${{ secrets.GITHUB_TOKEN }}
-          
+
       - name: Cache SonarQube packages
         uses: actions/cache@v1
-        if: ${{ matrix.configuration == 'Debug' }} 
+        if: ${{ matrix.configuration == 'Debug' }}
         with:
           path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-          
+
       - name: Cache SonarQube scanner
         id: cache-sonar-scanner
         uses: actions/cache@v1
@@ -57,14 +57,14 @@ jobs:
           path: .\.sonar\scanner
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
-          
+
       - name: Install SonarQube scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true' && ${{ matrix.configuration == Debug }}
+        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true' && ${{ matrix.configuration == 'Debug' }}
         shell: powershell
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-          
+
       - name: Start Analyze
         if: ${{ matrix.configuration == 'Debug' }}
         env:
@@ -76,11 +76,11 @@ jobs:
       - name: .NET Build Solution
         run: |
           dotnet build ./Solarisin.Core.sln --configuration ${{ matrix.configuration }}
-        
+
       - name: .NET Execute Unit Tests
         run: |
           dotnet test ./Solarisin.Core.sln --collect:"XPlat Code Coverage" --settings coverlet.runsettings --logger:trx --no-restore --verbosity detailed --configuration ${{ matrix.configuration }} --results-directory ${{ env.TRX_DIRECTORY }}
-        
+
       - name: End Analyze
         if: ${{ matrix.configuration == 'Debug' }}
         env:

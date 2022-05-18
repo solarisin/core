@@ -67,13 +67,15 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"solarisin_core_AYDQuREZCjPSIaQFyj5P" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"solarisin_core_AYDQuREZCjPSIaQFyj5P" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}" /s:${{ github.workspace }}/SonarQube.Analysis.xml
 
       - name: .NET Build Solution
-        run: dotnet build ./Solarisin.Core.sln --configuration ${{ matrix.configuration }}
+        run: |
+          dotnet build ./Solarisin.Core.sln --configuration ${{ matrix.configuration }}
         
       - name: .NET Execute Unit Tests
-        run: dotnet test ./Solarisin.Core.sln --no-restore --verbosity detailed --configuration ${{ matrix.configuration }} --results-directory ${{ env.TRX_DIRECTORY }}
+        run: |
+          dotnet test ./Solarisin.Core.sln --collect:"XPlat Code Coverage" --settings coverlet.runsettings --logger:trx --no-restore --verbosity detailed --configuration ${{ matrix.configuration }} --results-directory ${{ env.TRX_DIRECTORY }}
         
       - name: End Analyze
         env:
@@ -90,4 +92,3 @@ jobs:
           TRX_PATH: ${{ env.TRX_DIRECTORY }}
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BADGE_STYLE: emoji
-          

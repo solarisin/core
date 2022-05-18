@@ -377,6 +377,7 @@ MigrationBackup/
 /.idea/sonarlint/issuestore/**
 /.idea/.idea.*/.idea/dbnavigator.xml
 /.idea/.idea.*/.idea/misc.xml
+/.idea/.idea.*/.idea/sonarlint-state.xml
 
 # test output
 /test/output/**

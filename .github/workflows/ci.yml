@@ -73,7 +73,7 @@ jobs:
         run: dotnet build ./Solarisin.Core.sln --configuration ${{ matrix.configuration }}
         
       - name: .NET Execute Unit Tests
-        run: dotnet test ./Solarisin.Core.sln --no-restore --verbosity detailed --configuration ${{ matrix.configuration }} --results-directory ${{ TRX_DIRECTORY }}
+        run: dotnet test ./Solarisin.Core.sln --no-restore --verbosity detailed --configuration ${{ matrix.configuration }} --results-directory ${{ env.TRX_DIRECTORY }}
         
       - name: End Analyze
         env:
@@ -87,7 +87,7 @@ jobs:
         uses: solarisin/trx-parser@dev3
         id: trx-parser
         with:
-          TRX_PATH: ${{ TRX_DIRECTORY }}
+          TRX_PATH: ${{ env.TRX_DIRECTORY }}
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           BADGE_STYLE: emoji
           

@@ -380,3 +380,4 @@ MigrationBackup/
 
 # test output
 /test/output/**
+/.idea/.idea.Solarisin.Core/.idea/sonarlint-state.xml

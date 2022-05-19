@@ -1,5 +1,7 @@
-name: CI
+name: ci-push
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
 env:
   CI_BUILD: true
@@ -33,14 +35,6 @@ jobs:
           --collect:"XPlat Code Coverage"
           --logger:trx
           --no-restore
-      - name: Parse TRX File
-        if: ${{ always() }}
-        uses: solarisin/trx-parser@dev3
-        id: trx-parser
-        with:
-          TRX_PATH: ${{ env.TRX_DIRECTORY }}
-          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BADGE_STYLE: emoji
   build-test-analyze-debug:
     runs-on: windows-latest
     env:
@@ -110,11 +104,3 @@ jobs:
         run: >
           .\.sonar\scanner\dotnet-sonarscanner end 
           /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
-      - name: Parse TRX File
-        if: ${{ always() }}
-        uses: solarisin/trx-parser@dev3
-        id: trx-parser
-        with:
-          TRX_PATH: ${{ env.TRX_DIRECTORY }}
-          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BADGE_STYLE: emoji
